@@ -6,6 +6,7 @@ import org.openqa.selenium.WebDriver;
 public class HomePage extends BasePage {
     private final static By USER_ICON_LOCATOR = By.xpath("//ul[@class='slds-global-actions']//li[last()]");
     private final static By LEADS_TAB_LOCATOR = By.xpath("//*[@title='Leads']");
+    private final static By ACCOUNTS_TAB_LOCATOR = By.xpath("//span[@class='slds-truncate'][text()='Accounts']");
 
     public HomePage(WebDriver driver) {
         super(driver);
@@ -23,6 +24,10 @@ public class HomePage extends BasePage {
 
     public void openLeadsTab() {
         jsClick(driver.findElement(LEADS_TAB_LOCATOR));
+    }
+
+    public void openAccountsTab() {
+        jsClick(driver.findElement(ACCOUNTS_TAB_LOCATOR));
     }
 
 

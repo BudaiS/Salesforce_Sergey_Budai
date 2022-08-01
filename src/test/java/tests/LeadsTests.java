@@ -10,7 +10,7 @@ import pages.NewLeadPage;
 public class LeadsTests extends BaseTests {
     private final static String FIRST_NAME = "First";
     private final static String LAST_NAME = "Last";
-    private final static String COMPANY = "Company";
+    private final static String COMPANY = "ShabashCorporation";
     private final static String EXPECTED_NAME = "Mr. First Last";
     private LeadsPage leadsPage;
     private NewLeadPage newLeadPage;
@@ -24,7 +24,7 @@ public class LeadsTests extends BaseTests {
     }
 
     @Test
-    public void createLeadTest() throws InterruptedException {
+    public void createLeadTest() {
         loginPage.setUserName(USERNAME);
         loginPage.setPassword(PASSWORD);
         loginPage.clickLoginButton();
@@ -41,7 +41,7 @@ public class LeadsTests extends BaseTests {
         newLeadPage.clickSaveButton();
         leadInformationPage.waitForPageLoaded();
         Assert.assertEquals(leadInformationPage.getFieldNameText(), EXPECTED_NAME, "Checking the correctness of the data entered in the field");
-        Thread.sleep(10000);
+        Assert.assertEquals(leadInformationPage.getCompanyFieldText(), COMPANY, "Checking the correctness of the data entered in the field");
 
 
     }
