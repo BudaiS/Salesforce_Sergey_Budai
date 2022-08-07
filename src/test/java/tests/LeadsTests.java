@@ -1,30 +1,31 @@
 package tests;
 
+import com.github.javafaker.Faker;
+import enums.LeadStatus;
+import models.Lead;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import pages.LeadInformationPage;
+import pages.LeadDetailsPage;
 import pages.LeadsPage;
-import pages.NewLeadPage;
+import pages.modals.NewLeadModalPage;
+
 
 public class LeadsTests extends BaseTests {
-    private final static String FIRST_NAME = "First";
-    private final static String LAST_NAME = "Last";
-    private final static String COMPANY = "ShabashCorporation";
-    private final static String EXPECTED_NAME = "Mr. First Last";
+
     private LeadsPage leadsPage;
-    private NewLeadPage newLeadPage;
-    private LeadInformationPage leadInformationPage;
+    private NewLeadModalPage newLeadModalPage;
+    private LeadDetailsPage leadDetailsPage;
 
     @BeforeClass
     public void initialise() {
         leadsPage = new LeadsPage(driver);
-        newLeadPage = new NewLeadPage(driver);
-        leadInformationPage = new LeadInformationPage(driver);
+        newLeadModalPage = new NewLeadModalPage(driver);
+        leadDetailsPage = new LeadDetailsPage(driver);
     }
 
     @Test
-    public void createLeadTest() {
+    public void createLeadTest() throws InterruptedException {
         loginPage.setUserName(USERNAME);
         loginPage.setPassword(PASSWORD);
         loginPage.clickLoginButton();
@@ -32,16 +33,20 @@ public class LeadsTests extends BaseTests {
         homePage.openLeadsTab();
         leadsPage.waitForPageLoaded();
         leadsPage.clickNewButton();
-        newLeadPage.waitForPageLoaded();
-        newLeadPage.clickSalutationButton();
-        newLeadPage.clickSalutationMr();
-        newLeadPage.setFirstName(FIRST_NAME);
-        newLeadPage.setLastName(LAST_NAME);
-        newLeadPage.setCompanyName(COMPANY);
-        newLeadPage.clickSaveButton();
-        leadInformationPage.waitForPageLoaded();
-        Assert.assertEquals(leadInformationPage.getFieldNameText(), EXPECTED_NAME, "Checking the correctness of the data entered in the field");
-        Assert.assertEquals(leadInformationPage.getCompanyFieldText(), COMPANY, "Checking the correctness of the data entered in the field");
+        Thread.sleep(10000);
+        Faker faker = new Faker();
+        Lead testLead = new Lead.LeadBuilder(faker.company().name(), LeadStatus.QUALIFIED)
+                .lastName(faker.name().lastName())
+                .build();
+
+
+        newLeadModalPage.filForm(testLead);
+        newLeadModalPage.clickSaveButton();
+        Thread.sleep(10000);
+
+
+        // Assert.assertTrue(leadsPage.isConfirmationPopupPresent());
+        Assert.assertEquals(leadDetailsPage.getLeadInfo(), testLead);
 
 
     }
